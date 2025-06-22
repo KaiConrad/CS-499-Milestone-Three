@@ -1,7 +1,9 @@
 
-// Kailey Conrad  - Python game updated: 8/13/2023     JS Game Updated: 5/25/2025
+// Kailey Conrad  - Python game updated: 8/13/2023     
 // Purpose: Create text-based game in JavaScript from old Python game
 
+
+// const of all the rooms in the game, and where they are in relation to the other rooms
 const rooms = {
     "Main Room": { south: "Painting Room", Item: "Shard" },
     "Painting Room": { west: "Library", north: "Main Room", Item: "Photo" },
@@ -13,10 +15,17 @@ const rooms = {
     "Throne Room": { east: "Library", Item: "Hades" }
 };
 
+//setting the default state as the main room
 let state = "Main Room";
+
+//setting default inventory as blank as no items have been picked up yet
 let inventory = [];
+
+//const of all items that are able to be picked up
 const items = ['Shard', 'Photo', 'Notebook', 'Childs Art', 'Broken Clock', 'Stuffed Toy', 'Record'];
 
+
+//instrucctions so that any player can play the game
 function instructions() {
     alert(
         `Welcome to "Cycles". A game of life - or death.\n` +
@@ -29,6 +38,8 @@ function instructions() {
     );
 }
 
+
+//get state function  to get the room from direction
 function getNewState(currentState, direction) {
     const room = rooms[currentState];
     if (room && room[direction]) {
@@ -37,10 +48,12 @@ function getNewState(currentState, direction) {
     return currentState;
 }
 
+// get item function, gets the room's item
 function getItem(state) {
     return rooms[state].Item;
 }
 
+// room descriptions
 function describeRoom(state) {
     if (state === "Main Room") {
         console.log("You arrive in a desolate room. Spectral figures drift around...");
@@ -85,6 +98,8 @@ function describeRoom(state) {
     // NEED TO: Add in the other rooms, flesh out the full descriptions.
 }
 
+
+//item descriptions - unfinished with placeholders.
 function describeItem(item) {
     switch (item) {
         case "Shard":
@@ -112,8 +127,12 @@ function describeItem(item) {
 }
 //NEED TO: copy paste descriptions from the python code to fully flesh out the items. 
 
+
+//prints instructions
 instructions();
 
+
+// main game loop 
 while (true) {
     console.log(`Welcome, to the ${state}`);
     describeRoom(state);
@@ -124,14 +143,18 @@ while (true) {
     console.log(`You take a moment to look around the room again and find a ${item}.`);
     describeItem(item);
 
+    //adding in combat functionality for if in the last room with Hades
     if (item === "Hades") {
         if (inventory.length < 7) {
         console.log("He shoots you a cold glare... You are not ready. The GAME of Cycles is now OVER.");
         console.log("Suddenly, Hades attacks you!");
 
+        //combat triggered if inventory < 7, sets health as a new parameter
         let playerHealth = 10;
         let hadesHealth = 100;
 
+        //combat loop - randomized attack values
+        //hades attacks first
         while (playerHealth > 0 && hadesHealth > 0) {
             const hadesAttack = Math.floor(Math.random() * 10) + 1;
             playerHealth -= hadesAttack;
@@ -143,8 +166,10 @@ while (true) {
                 break;
             }
 
+            //Player has option to attack or flee
             const action = prompt("Do you ATTACK or FLEE?").toLowerCase();
 
+            //if they attack, their attack is randomized, if they flee, there is a chance that they successfully flee, or fail
             if (action === "attack") {
                 const playerAttack = Math.floor(Math.random() * 5) + 1;
                 hadesHealth -= playerAttack;
@@ -165,7 +190,9 @@ while (true) {
                 // No action taken, loop continues
             }
         }
+        //end game
         break;
+        //if they have all the items, there is the good ending interaction, then game end
     } else {
         console.log("You tell him of the items you collected. He replies with a nod.");
         const choice = prompt("You're faced with a decision. Do you want to remember? Yes, or no?").toLowerCase();
@@ -180,8 +207,11 @@ while (true) {
     }
     //NEED TO fully copy over interaction from python.
 
+    //prompt to get direction or item grab from player
     let input = prompt("Which direction would you like to go? Or would you like to get the item in the room?").toLowerCase();
 
+
+      //basic error handling
     if (input.startsWith("go ")) {
         let direction = input.slice(3).trim();
         const newState = getNewState(state, direction);
